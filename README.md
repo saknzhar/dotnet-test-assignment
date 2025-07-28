@@ -7,54 +7,23 @@ This is a test assignment for FastMCP.me - a service for creating and deploying 
     *   [.NET SDK](https://dotnet.microsoft.com/en-us/download) (version 8.0 or later)
     *   A suitable IDE or text editor (e.g., Visual Studio Code, Visual Studio). Visual Studio Code is recommended.
     *   Optional: Docker Desktop (if you want to use Docker).
+    *   
+## Running the ASP.NET Core MCP Server Locally
 
-2.  **Clone the Repository:**
-
-    ```bash
-    git clone <repository_url>
-    cd <project_directory>
-    ```
-
-3.  **Restore Dependencies:**
+1.  **Get the repository root.**
 
     ```bash
-    dotnet restore
+    # bash/zsh
+    REPOSITORY_ROOT=$(git rev-parse --show-toplevel)
     ```
 
-4.  **Configuration:**
+    ```powershell
+    # PowerShell
+    $REPOSITORY_ROOT = git rev-parse --show-toplevel
+    ```
 
-    *   The application uses `appsettings.json` for configuration. Modify this file to suit your needs. Key settings include:
-        *   `Logging`: Configures logging levels and providers.
-        *   `AllowedHosts`: Specifies the allowed hosts for the application.
-
-5.  **Build the Application:**
+2.  **Run the MCP server app.**
 
     ```bash
-    dotnet build
-    ```
-
-## Example Usage/Demo
-
-1.  **Run the Application:**
-
-    ```bash
-    dotnet run
-    ```
-
-    This will start the server. You should see output indicating the server is running and listening on a specific port (typically `http://localhost:5000` or `http://localhost:5001`).
-
-2.  **Access Endpoints:**
-
-    *   Open your web browser or use a tool like `curl` or Postman to access the API endpoints.
-    *   Example: `http://localhost:5000/weatherforecast` (This is a standard endpoint created by the default .NET template).
-
-## Implementation Approach Documentation
-
-*   **Project Structure:** The project follows a standard .NET web API structure.
-*   **Technology Stack:**
-    *   .NET 8.0: The core framework.
-    *   ASP.NET Core: For building the web API.
-    *   JSON: For configuration and data serialization.
-*   **Design Patterns:** The project uses basic dependency injection.
-*   **Error Handling:** Global exception handling is implemented using middleware.
-
+    cd $REPOSITORY_ROOT/todo-list
+    dotnet run --
