@@ -1,85 +1,108 @@
-# MCP Server
+# WeatherMcpServer
 
-This README was created using the C# MCP server project template. It demonstrates how you can easily create an MCP server using C# and publish it as a NuGet package.
+A .NET MCP (Model Context Protocol) server that provides weather information for specified locations.
 
-See [aka.ms/nuget/mcp/guide](https://aka.ms/nuget/mcp/guide) for the full guide.
+## Prerequisites
 
-Please note that this template is currently in an early preview stage. If you have feedback, please take a [brief survey](http://aka.ms/dotnet-mcp-template-survey).
+*   .NET SDK (version 8.0 or later)
 
-## Checklist before publishing to NuGet.org
+## Installation
 
-- Test the MCP server locally using the steps below.
-- Update the package metadata in the .csproj file, in particular the `<PackageId>`.
-- Update `.mcp/server.json` to declare your MCP server's inputs.
-  - See [configuring inputs](https://aka.ms/nuget/mcp/guide/configuring-inputs) for more details.
-- Pack the project using `dotnet pack`.
+1.  Clone the repository:
 
-The `bin/Release` directory will contain the package file (.nupkg), which can be [published to NuGet.org](https://learn.microsoft.com/nuget/nuget-org/publish-a-package).
+    ```bash
+    git clone <repository_url>
+    ```
 
-## Developing locally
+2.  Navigate to the project directory:
 
-To test this MCP server from source code (locally) without using a built MCP server package, you can configure your IDE to run the project directly using `dotnet run`.
+    ```bash
+    cd dotnet-test-assignment/WeatherMcpServer
+    ```
 
-```json
-{
-  "servers": {
-    "WeatherMcpServer": {
-      "type": "stdio",
-      "command": "dotnet",
-      "args": [
-        "run",
-        "--project",
-        "<PATH TO PROJECT DIRECTORY>"
-      ]
-    }
-  }
-}
-```
+3.  Build the project:
 
-## Testing the MCP Server
+    ```bash
+    dotnet build
+    ```
 
-Once configured, you can ask Copilot Chat for a random number, for example, `Give me 3 random numbers`. It should prompt you to use the `get_random_number` tool on the `WeatherMcpServer` MCP server and show you the results.
+4.  Configure the OpenWeatherMap API key:
 
-## Publishing to NuGet.org
+    *   Create an account at [OpenWeatherMap](https://openweathermap.org/) and obtain an API key.
+    *   Add the API key to the `appsettings.json` file:
 
-1. Run `dotnet pack -c Release` to create the NuGet package
-2. Publish to NuGet.org with `dotnet nuget push bin/Release/*.nupkg --api-key <your-api-key> --source https://api.nuget.org/v3/index.json`
+        ```json
+        {
+          "Logging": {
+            "LogLevel": {
+              "Default": "Information",
+              "Microsoft.AspNetCore": "Warning"
+            }
+          },
+          "AllowedHosts": "*",
+          "OpenWeatherMap": {
+            "ApiKey": "<your_api_key>"
+          }
+        }
+        ```
 
-## Using the MCP Server from NuGet.org
+## Usage
 
-Once the MCP server package is published to NuGet.org, you can configure it in your preferred IDE. Both VS Code and Visual Studio use the `dnx` command to download and install the MCP server package from NuGet.org.
+The WeatherMcpServer provides the following tools:
 
-- **VS Code**: Create a `<WORKSPACE DIRECTORY>/.vscode/mcp.json` file
-- **Visual Studio**: Create a `<SOLUTION DIRECTORY>\.mcp.json` file
+*   **GetCurrentWeather:** Gets current weather conditions for the specified city.
+    *   Parameters:
+        *   `city`: The city name to get weather for (string).
+        *   `countryCode` (optional): Country code (e.g., 'US', 'UK') (string).
+    *   Example:
+        ```json
+        {
+          "tool": "GetCurrentWeather",
+          "args": {
+            "city": "London",
+            "countryCode": "UK"
+          }
+        }
+        ```
+*   **GetWeatherForecast:** Gets weather forecast for the specified city.
+    *   Parameters:
+        *   `city`: The city name to get weather forecast for (string).
+        *   `countryCode` (optional): Country code (e.g., 'US', 'UK') (string).
+    *   Example:
+        ```json
+        {
+          "tool": "GetWeatherForecast",
+          "args": {
+            "city": "London",
+            "countryCode": "UK"
+          }
+        }
+        ```
+*   **GetWeatherAlerts:** Gets weather alerts/warnings for the specified city.
+    *   Parameters:
+        *   `city`: The city name to get weather alerts for (string).
+        *   `countryCode` (optional): Country code (e.g., 'US', 'UK') (string).
+    *   Example:
+        ```json
+        {
+          "tool": "GetWeatherAlerts",
+          "args": {
+            "city": "Miami",
+            "countryCode": "US"
+          }
+        }
+        ```
 
-For both VS Code and Visual Studio, the configuration file uses the following server definition:
+To use the MCP server, send requests to the standard input stream with the appropriate tool and parameters. The server will respond on the standard output stream. Requests and responses are in JSON format.
 
-```json
-{
-  "servers": {
-    "WeatherMcpServer": {
-      "type": "stdio",
-      "command": "dnx",
-      "args": [
-        "<your package ID here>",
-        "--version",
-        "<your package version here>",
-        "--yes"
-      ]
-    }
-  }
-}
-```
+## Configuration
 
-## More information
+The following configuration settings are available:
 
-.NET MCP servers use the [ModelContextProtocol](https://www.nuget.org/packages/ModelContextProtocol) C# SDK. For more information about MCP:
+*   `OpenWeatherMap:ApiKey`: The API key for the OpenWeatherMap API. This is required for the server to function correctly.
 
-- [Official Documentation](https://modelcontextprotocol.io/)
-- [Protocol Specification](https://spec.modelcontextprotocol.io/)
-- [GitHub Organization](https://github.com/modelcontextprotocol)
+## Troubleshooting
 
-Refer to the VS Code or Visual Studio documentation for more information on configuring and using MCP servers:
-
-- [Use MCP servers in VS Code (Preview)](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-- [Use MCP servers in Visual Studio (Preview)](https://learn.microsoft.com/visualstudio/ide/mcp-servers)
+*   **API Key Issues:** If you are not getting weather data, ensure that your API key is correctly configured in `appsettings.json` and that it is valid.
+*   **Network Issues:** Check your internet connection and ensure that the server can access the OpenWeatherMap API.
+*   **Invalid Input:** Ensure that the input parameters are valid and in the correct format.
