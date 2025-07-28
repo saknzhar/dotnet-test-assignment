@@ -25,5 +25,5 @@ This is a test assignment for FastMCP.me - a service for creating and deploying 
 2.  **Run the MCP server app.**
 
     ```bash
-    cd $REPOSITORY_ROOT/todo-list
+    cd $REPOSITORY_ROOT/WeatherMcpServer
     dotnet run --
